@@ -113,10 +113,9 @@
       (setf (uip-frame/directory clim:*application-frame*)
             (directory-namestring file))
       (multiple-value-bind (_ match)
-          (cl-ppcre:scan-to-strings "(^.*?)(_F[1-9][0-9]*)?\\.(png|jpe?g|tiff?|bmp|gif)$"
-                                    (namestring file))
+          (get-origin-image-file-name file)
         (declare (ignore _))
-        (setq file (format nil "~A.~A" (aref match 0) (aref match 2)))
+        (setq file (format nil "~A.~A" (aref match 0) (aref match 1)))
         (setf
          (uip-frame/images clim:*application-frame*)
          (append
@@ -127,8 +126,8 @@
             while
             (ignore-errors
              (setq c (read-image-file
-                      (concatenate 'string
-                                   (aref match 0) "_F"(write-to-string x) "." (aref match 2)))))
+                      (get-image-file-name-with-number
+                       (aref match 0) (aref match 1) x))))
             collect c))))
       (main-image-update
        clim:*application-frame*
@@ -240,3 +239,16 @@
          (add-gray-image result-image img color)))
      images color-list hidden)
     result-image))
+
+(defun get-origin-image-file-name (file)
+  (multiple-value-bind (_ match)
+      (cl-ppcre:scan-to-strings "(^.*?)(_F([1-9][0-9]*))?\\.(png|jpe?g|tiff?|bmp|gif)$"
+                                (namestring file))
+    (declare (ignore _))
+    (values (format nil "~A.~A" (aref match 0) (aref match 3))
+            (vector (aref match 0) (aref match 3))
+            (read-from-string (aref match 2)))))
+
+(defun get-image-file-name-with-number (base extension number)
+  (concatenate 'string
+               base "_F"(write-to-string number) "." extension))
