@@ -141,7 +141,7 @@
     'uip-frame
     :directory (uip-frame/directory clim:*application-frame*))))
 
-(defvar default-color-list
+(defvar *default-color-list*
   '((1.0 0.0 0.0)
     (0.0 1.0 0.0)
     (0.0 0.0 1.0)
@@ -229,7 +229,7 @@
                                  ,color)))))))))))
 
 ;; Each element of IMAGE-PATHS should be class pathname
-(defun create-blend-image (&key images (color-list default-color-list) hidden)
+(defun create-blend-image (&key images (color-list *default-color-list*) hidden)
   (let* ((hidden (or hidden (make-list (length images) :initial-element nil)))
          (result-image
            (with-image-bounds (height width) (car images)
