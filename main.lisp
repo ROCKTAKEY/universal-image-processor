@@ -47,8 +47,8 @@
   (:layouts
    (default (clim:vertically ()
               (18/20 (clim:labelling (:label "Test Image"
-                                 :align-x :center
-                                 :label-alignment :top)
+                                      :align-x :center
+                                      :label-alignment :top)
                        main-image))
               (2/20 (clim:labelling (:label "HS")
                       hideshow))))))
@@ -153,18 +153,18 @@
   (let ((height '#:height)
         (width '#:width))
     `(with-image-bounds (,height ,width) ,image
-         (loop for ,i below ,height
-               do (loop for ,j below ,width
-                        do (progn ,@body))))))
+       (loop for ,i below ,height
+             do (loop for ,j below ,width
+                      do (progn ,@body))))))
 
 (defun opticl-image-to-clim-image (opticl-image)
   (let ((clim-image (make-instance
-                       'clim-internals::image-pattern
-                        :array
-                        (make-array
-                         (with-image-bounds (height width) opticl-image
-                           (list height width))
-                         :element-type '(unsigned-byte 32))))
+                     'clim-internals::image-pattern
+                     :array
+                     (make-array
+                      (with-image-bounds (height width) opticl-image
+                        (list height width))
+                      :element-type '(unsigned-byte 32))))
         (clim-image-bit 8))
     (loop-with-image (i j)
         opticl-image
@@ -203,8 +203,8 @@
   (let ((pixel-size' #:pixel-size)
         (result-pixel-size '#:result-pixel-size))
     `(let ((,pixel-size (etypecase ,img
-                         (16-bit-gray-image 16)
-                         (8-bit-gray-image 8)))
+                          (16-bit-gray-image 16)
+                          (8-bit-gray-image 8)))
            (,result-pixel-size (etypecase ,result-image
                                  (16-bit-rgb-image 16)
                                  (8-bit-rgb-image 8))))
