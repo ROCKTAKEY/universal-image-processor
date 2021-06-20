@@ -1,4 +1,14 @@
-﻿(in-package :uip)
+﻿(defpackage :universal-image-processor/utils
+  (:use :clim-lisp :alexandria :opticl)
+  (:export
+   :loop-with-image
+   :opticl-image-to-clim-image
+   :add-gray-image
+   :create-blend-image
+   :get-origin-image-file-name
+   :get-image-file-name-with-number))
+
+(in-package :universal-image-processor/utils)
 
 (defvar *default-color-list*
   '((1.0 0.0 0.0)

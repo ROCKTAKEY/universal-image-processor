@@ -8,9 +8,11 @@
   (asdf:load-system '#:select-file)
   (asdf:load-system '#:alexandria))
 
-(defpackage #:universal-image-processor
-  (:nicknames #:uip)
-  (:use #:clim-lisp #:alexandria #:opticl)
+(defpackage :universal-image-processor/main
+  (:nicknames :universal-image-processor :uip)
+  (:use :clim-lisp :alexandria :opticl
+        :universal-image-processor/utils
+        :universal-image-processor/summary)
   (:export :run))
 
 (in-package :uip)

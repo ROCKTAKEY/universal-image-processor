@@ -1,4 +1,8 @@
-﻿(in-package :uip)
+﻿(defpackage :universal-image-processor/summary
+  (:use :clim-lisp :alexandria :opticl
+        :universal-image-processor/utils))
+
+(in-package :universal-image-processor/summary)
 
 (clim:define-application-frame uip-frame-summary ()
   ((image-plist-list :initarg :image-plist-list
@@ -31,3 +35,24 @@
                        main-image))
               (2/20 (clim:labelling (:label "HS")
                       hideshow))))))
+
+(defvar *summary-max-width* 5000)
+
+(defun summary-directory (frame directory)
+  (let* ((ht (make-hash-table)))
+    (mapc
+     (lambda (file)
+       (let ((base-file-info
+               (multiple-value-bind (base ext)
+                   (get-origin-image-file-name file)
+                 (list base ext))))
+         (incf (getf (gethash ht base-file-info) :number 0))))
+     (uiop:directory-files directory))
+
+    (mapc
+     (lambda (base-file-info)
+       (let* ((base (car base-file-info))
+              (ext (cdr base-file-info))
+              (file (get-image-file-name-with-number base ext)))
+         (read-image-file )))
+     (hash-table-keys ht))))
