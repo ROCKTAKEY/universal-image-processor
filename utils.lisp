@@ -1,5 +1,6 @@
-﻿(defpackage :universal-image-processor/utils
+(defpackage :universal-image-processor/utils
   (:use :clim-lisp :alexandria :opticl)
+  (:import-from :cl-ppcre)
   (:export
    :loop-with-image
    :opticl-image-to-clim-image
@@ -117,8 +118,10 @@
     (declare (ignore _))
     (values (format nil "~A.~A" (aref match 0) (aref match 3))
             (vector (aref match 0) (aref match 3))
-            (read-from-string (aref match 2)))))
+            (read-from-string (or (aref match 2) "1")))))
 
 (defun get-image-file-name-with-number (base extension number)
-  (concatenate 'string
-               base "_F"(write-to-string number) "." extension))
+  (if (= number 1)
+      (concatenate 'string base "." extension)
+      (concatenate 'string
+                   base "_F" (write-to-string number) "." extension)))

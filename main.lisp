@@ -1,18 +1,10 @@
-﻿(eval-when (:compile-toplevel :load-toplevel :execute)
-  (in-package :common-lisp-user)
-  (asdf:load-system '#:cl-ppcre)
-  (asdf:load-system '#:clim)
-  (asdf:load-system '#:clim-lisp)
-  (asdf:load-system '#:mcclim)
-  (asdf:load-system '#:opticl)
-  (asdf:load-system '#:select-file)
-  (asdf:load-system '#:alexandria))
-
 (defpackage :universal-image-processor/main
   (:nicknames :universal-image-processor :uip)
   (:use :clim-lisp :alexandria :opticl
         :universal-image-processor/utils
         :universal-image-processor/summary)
+  (:import-from :clim)
+  (:import-from :select-file)
   (:export :run))
 
 (in-package :uip)
@@ -131,6 +123,29 @@
                       (get-image-file-name-with-number
                        (aref match 0) (aref match 1) x))))
             collect c))))
+      ;; (mapcar
+      ;;  (lambda (child)
+      ;;    (clim:sheet-disown-child (clim:find-pane-named clim:*application-frame* 'hideshow)
+      ;;                             child))
+      ;;  (clim:sheet-children (clim:find-pane-named clim:*application-frame* 'hideshow)))
+
+      ;; (let (selection)
+      ;;  (loop
+      ;;   for i from 1 below (1+ (length (uip-frame/images clim:*application-frame*)))
+      ;;   do (push
+      ;;       (clim:make-pane 'clim:toggle-button
+      ;;                       :label (concatenate 'string "F" (write-to-string i))
+      ;;                       :value t
+      ;;                       :indicator-type :some-of)
+      ;;       selection)
+      ;;      (clim:sheet-adopt-child
+      ;;       (clim:find-pane-named clim:*application-frame* 'hideshow)
+      ;;       (car selection)))
+      ;;   (setf (clim:gadget-value (clim:find-pane-named clim:*application-frame* 'hideshow))
+      ;;         selection))
+
+      ;; (clim:redisplay-frame-pane clim:*application-frame*
+      ;;                            (clim:find-pane-named clim:*application-frame* 'hideshow))
       (main-image-update
        clim:*application-frame*
        (make-list (length (uip-frame/images clim:*application-frame*)))))))
@@ -144,8 +159,7 @@
 
 (define-uip-frame-command (com-summary-directory :name t :menu t)
     ()
-  (clim:run-frame-top-level
-   (clim:make-application-frame
-    'uip-frame
-    :directory (uip-frame/directory clim:*application-frame*)))
-  (summary-directory clim:*application-frame* (uip-frame/directory clim:*application-frame*)))
+  (let ((frame (clim:make-application-frame
+                'uip-frame-summary
+                :directory (uip-frame/directory clim:*application-frame*))))
+    (clim:run-frame-top-level frame)))
